@@ -1,8 +1,5 @@
 const express = require('express');
-const bodyParser = require('body-parser')
-const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+const router = express.Router();
 
 let users = [
   {
@@ -19,15 +16,12 @@ let users = [
   }
 ]
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
 
-app.get('/users', (req, res) => {
+router.get('/', (req, res) => {
   return res.json(users);
 })
 
-app.get('/users/:id', (req, res) => {
+router.get('/:id', (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (!id) {
     return res.status(400).json({error: 'Incorrect id'});
@@ -41,7 +35,7 @@ app.get('/users/:id', (req, res) => {
   return res.json(user);
 });
 
-app.delete('/users/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
   const id = parseInt(req.params.id, 10);
   if(!id) {
     return res.status(400).json({error: 'Incorrect id'});
@@ -58,7 +52,7 @@ app.delete('/users/:id', (req, res) => {
   res.status(204).send();
 });
 
-app.post('/users', (req, res) => {
+router.post('/', (req, res) => {
   const name = req.body.name || '';
   if(!name.length){
     return res.status(400).json({error: 'Incorrect name'});
@@ -76,6 +70,4 @@ app.post('/users', (req, res) => {
   return res.status(201).json(newUser);
 })
 
-app.listen(3000, () => {
-  console.log('Example');
-});
+module.exports = router;
