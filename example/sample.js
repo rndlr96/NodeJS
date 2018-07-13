@@ -1,11 +1,13 @@
-const http = require('http');
+var express = require('express');
+var app = express();
+var router = require('./router/main')(app);
 
-const hostname = '127.0.0.1';
-const port = '1337';
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
 
-http.createServer((req, res) => {
-  res.writeHead(200, {'Content-Type' : 'text/plain'});
-  res.end('Hello World\n');
-}).listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-})
+var server = app.listen(3000, function(){
+    console.log("Express server has started on port 3000")
+});
+
+app.use(express.static('public'));
