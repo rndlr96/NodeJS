@@ -76,4 +76,28 @@ module.exports = function(app, fs)
              }
          });
      });
+
+     app.delete('/deleteUser/:username', function(req, res){
+         var result = {  };
+         var username = req.params.username;
+
+         fs.readFile(__dirname + "/../data/" + "data.json", 'utf8', function(err, data){
+             var users = JSON.parse(data);
+
+             if(!users[username]){
+
+                 result["success"] = 0;
+                 result["error"] = "Not found user";
+                 res.json(result);
+                 return;
+             }
+
+             delete users[req.params.username];
+             fs.writeFile(__dirname + "/../data/" + "data.json", JSON.stringify(users, null, '\t'), "utf8", function(err, data){
+                result["success"] = 1;
+                res.json(result);
+                return;
+            });
+        });
+    });
 }
